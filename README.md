@@ -1,5 +1,6 @@
 # SF6 Live Overlay
-![Uploading Screenshot 2026-01-16 11-18-15.png…]()
+<img width="2560" height="1440" alt="Screenshot 2026-01-16 11-18-15" src="https://github.com/user-attachments/assets/aee264c0-e4ad-4cd5-9741-619ddd6e4eae" />
+
 
 > Street Fighter 6 直播专用 Overlay - OBS 文字源 + 自动生成曲线图方案
 
