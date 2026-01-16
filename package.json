@@ -1,0 +1,21 @@
+{
+  "name": "sf6-live-overlay",
+  "version": "1.0.0",
+  "description": "Street Fighter 6 Live Overlay for OBS",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node -e \"const {outputTxtFiles} = require('./output-txt'); console.log('Test OK');\""
+  },
+  "keywords": [
+    "sf6",
+    "obs",
+    "overlay"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "chrome-launcher": "^1.2.1",
+    "puppeteer-core": "^21.11.0"
+  }
+}

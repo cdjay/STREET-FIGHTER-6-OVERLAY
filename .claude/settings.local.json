@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(git clone:*)",
+      "Bash(xcopy:*)",
+      "Bash(cmd /c \"copy /Y D:\\\\cp\\\\sf6live\\\\sf6-rank-watchrrr-reference\\\\client\\\\images\\\\*.png D:\\\\cp\\\\sf6live\\\\images\\\\\")",
+      "Bash(powershell:*)",
+      "Bash(node -e:*)",
+      "Bash(npm install:*)",
+      "Bash(node generate-chart-png.js:*)",
+      "Bash(dir:*)",
+      "Bash(ls:*)",
+      "Bash(node -c:*)",
+      "Bash(test:*)",
+      "Bash(node regenerate-chart.js:*)",
+      "Bash(node check-session.js:*)"
+    ]
+  }
+}

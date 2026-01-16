@@ -1,0 +1,25 @@
+# 依赖
+node_modules/
+package-lock.json
+
+# 运行时生成的文件
+player_data.json
+session.json
+localStorage.json
+chart-generator.html
+
+# OBS 输出目录
+obs-output/
+
+# 日志
+*.log
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

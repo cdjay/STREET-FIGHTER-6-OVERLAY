@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SF6 Live Overlay - 会话控制</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #9422BB;
+            --color-primary-light: #EE74E8;
+            --color-secondary: #371546;
+            --color-mr: #00B3FF;
+            --color-bg: #1a0a20;
+            --color-bg-card: #2a1035;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Cascadia Code', sans-serif;
+            background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-secondary) 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--color-primary-light), var(--color-mr));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .card {
+            background: var(--color-bg-card);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(212, 130, 244, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--color-primary-light);
+        }
+
+        .session-user {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+            margin-left: 8px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(212, 130, 244, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .history {
+            margin-top: 16px;
+        }
+
+        .history-title {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .history-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .history-item {
+            flex: 0 0 auto;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(212, 130, 244, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border-radius: 999px;
+        }
+
+        .history-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .history-empty {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        button {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(148, 34, 187, 0.4);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: rgba(255, 68, 102, 0.8);
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background: rgba(255, 68, 102, 1);
+            transform: translateY(-2px);
+        }
+
+        .status {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .status.show {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status.success {
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            color: #00FF88;
+        }
+
+        .status.error {
+            background: rgba(255, 68, 102, 0.2);
+            border: 1px solid rgba(255, 68, 102, 0.3);
+            color: #FF4466;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--color-mr);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 4px;
+        }
+
+        .info-box {
+            background: rgba(0, 179, 255, 0.1);
+            border: 1px solid rgba(0, 179, 255, 0.3);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        .info-box h4 {
+            color: var(--color-mr);
+            margin-bottom: 8px;
+        }
+
+        .info-box p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SF6 Live Overlay</h1>
+            <p class="subtitle">会话控制面板</p>
+        </header>
+
+        <!-- 开始获取数据 -->
+        <div class="card">
+            <h2>开始获取数据</h2>
+            <p style="color: rgba(255,255,255,0.6); margin-bottom: 16px;">
+                输入 Capcom User ID，点击按钮后会打开 Buckler 卡片页并自动开始获取数据
+            </p>
+
+            <div class="form-group">
+                <label for="userId">Capcom User ID</label>
+                <input type="text" id="userId" placeholder="例如: 1234567890">
+            </div>
+
+            <div class="button-group">
+                <button class="btn-primary" id="startFetchBtn">开始获取数据</button>
+            </div>
+
+            <div class="history">
+                <div class="history-title">历史记录</div>
+                <div class="history-list" id="historyList"></div>
+            </div>
+        </div>
+
+        <!-- 当前状态 -->
+        <div class="card" id="sessionCard" style="display: none;">
+            <h2>当前会话<span class="session-user" id="sessionUser"></span></h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="sessionStartMr">-</div>
+                    <div class="stat-label">起始 MR</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="sessionCurrentMr">-</div>
+                    <div class="stat-label">当前 MR</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="sessionChange">-</div>
+                    <div class="stat-label">变化</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 会话控制 -->
+        <div class="card">
+            <h2>会话控制</h2>
+            <p style="color: rgba(255,255,255,0.6); margin-bottom: 16px;">
+                结束会话会保留历史记录，清除历史会彻底重置
+            </p>
+
+            <div id="status" class="status"></div>
+
+            <div class="button-group">
+                <button class="btn-secondary" id="endSessionBtn">结束会话保留记录</button>
+                <button class="btn-danger" id="clearBtn">清除历史记录</button>
+            </div>
+        </div>
+
+        <!-- 使用说明 -->
+        <div class="card">
+            <h2>使用说明</h2>
+
+            <div class="info-box">
+                <h4>📌 工作原理</h4>
+                <p>油猴脚本自动从 Capcom Buckler 获取数据并发送到本地服务器，无需手动配置。</p>
+            </div>
+
+            <div class="info-box">
+                <h4>🔄 如何开始新直播</h4>
+                <p>点击"结束会话保留记录"或"清除历史记录"，下次更新时将创建新会话。</p>
+            </div>
+
+            <div class="info-box">
+                <h4>📊 OBS 输出文件</h4>
+                <p>所有文本文件位于 <code>obs-output/</code> 目录，在 OBS 中添加对应的文字源即可。</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config-simple.js"></script>
+</body>
+</html>
