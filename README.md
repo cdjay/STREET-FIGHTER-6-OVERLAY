@@ -1,4 +1,5 @@
 # SF6 Live Overlay
+![Uploading Screenshot 2026-01-16 11-18-15.png…]()
 
 > Street Fighter 6 直播专用 Overlay - OBS 文字源 + 自动生成曲线图方案
 
